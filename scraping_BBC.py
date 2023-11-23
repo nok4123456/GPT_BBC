@@ -2,11 +2,13 @@
 from bs4 import BeautifulSoup
 import requests
 import polars as pl
+import logging
 
 
 def main():
     ROOT_WEBSITE = "https://www.bbc.com"
     NEWS_WEBSITE = "https://www.bbc.com/news"
+    logging.info("Scraping start")
     response = requests.get(NEWS_WEBSITE)
     content = response.text
     content_element: BeautifulSoup = BeautifulSoup(content, "lxml")
@@ -56,7 +58,7 @@ def main():
 
     all_news_df = pl.DataFrame(news, schema=df_schema)
     all_news_df.write_csv("news.csv")
-
+    logging.info("Scraping end")
     return
 
 
