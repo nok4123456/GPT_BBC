@@ -4,7 +4,8 @@ import polars as pl
 
 @st.cache_data
 def load_data():
-    return pl.read_csv("./transformed_news.csv")
+    transformed_news_path = "https://storage.googleapis.com/ken_chan_personal_project/gpt_bbc_project/transformed_news.csv"
+    return pl.read_csv(transformed_news_path)
 
 
 def load_css(file_name):
@@ -18,6 +19,9 @@ def main():
     st.write(
         "# <span style = 'text-align:center'>News Summary Demo</span>",
         unsafe_allow_html=True,
+    )
+    st.write(
+        "This application is a demo for BBC news summary. It will scrape the most read news from BBC and use LLM to generate the summary."
     )
     news_df = load_data()
     for row in news_df.rows(named=True):
