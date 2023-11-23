@@ -3,6 +3,7 @@
 from dotenv import load_dotenv
 from chain import init_chain
 import polars as pl
+import logging
 
 
 def main():
@@ -12,10 +13,9 @@ def main():
     transformed_news_list = []
     for row in original_news_df.rows(named=True):
         docs = row["content"]
-        print("Chain invoke start")
-        print(len(docs))
+        logging.info("Chain invoke start")
         res = chain.invoke({"text": docs})
-        print("Chain invoke end")
+        logging.info("Chain invoke end")
         row["summary"] = res
         transformed_news_list.append(row)
     transformed_news_df = pl.DataFrame(transformed_news_list)
