@@ -57,10 +57,12 @@ def main():
         news.append(row)
 
     all_news_df = pl.DataFrame(news, schema=df_schema)
-    all_news_df.write_csv("news.csv")
+    all_news_df.write_csv("./data/news.csv")
     logging.info("Scraping end")
     return
 
 
 if __name__ == "__main__":
     main()
+
+# %%
