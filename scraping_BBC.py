@@ -43,8 +43,12 @@ def main():
         image_container_element = article_element.find(
             "div", {"data-component": "image-block"}
         )
-        image_element = image_container_element.find("img")
-        row["image"] = image_element["src"]
+        try:
+            image_element = image_container_element.find("img")
+            row["image"] = image_element["src"]
+        except AttributeError:
+            image_element = None
+            row["image"] = "None"
 
         text_elements_list = article_element.find_all(
             "div", {"data-component": "text-block"}
