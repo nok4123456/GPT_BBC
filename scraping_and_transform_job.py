@@ -1,6 +1,6 @@
 # %%
-from transform import main as transform_main
-from scraping_BBC import main as scraping_main
+from transform.transform import main as transform_main
+from scraping.scraping_BBC import main as scraping_main
 from dotenv import load_dotenv
 
 
