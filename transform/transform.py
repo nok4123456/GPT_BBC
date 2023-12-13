@@ -1,5 +1,5 @@
 # %%
-from transform.chain.chain import init_chain
+from transform.chain.chain import init_cnn_chain
 from cloudpathlib import GSPath
 import polars as pl
 import logging
@@ -9,7 +9,7 @@ def main():
     GS_FILE_PATH = GSPath(
         "gs://ken_chan_personal_project/gpt_bbc_project/transformed_news.csv"
     )
-    chain = init_chain()
+    chain = init_cnn_chain()
     original_news_df = pl.read_csv("./data/news.csv")
     transformed_news_list = []
     for row in original_news_df.rows(named=True):

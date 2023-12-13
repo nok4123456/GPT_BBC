@@ -1,7 +1,8 @@
+# %%
 from dotenv import load_dotenv
-
-from langchain.prompts import ChatPromptTemplate
 from langchain.llms import HuggingFaceHub
+from langchain.llms.huggingface_pipeline import HuggingFacePipeline
+from langchain.prompts import ChatPromptTemplate
 
 
 def init_llm(repo_id: str, model_kwargs: dict = None):
@@ -12,7 +13,7 @@ def init_prompt_template(prompt_template: str):
     return ChatPromptTemplate.from_template(prompt_template)
 
 
-def init_chain():
+def init_cnn_chain():
     REPO_ID = "facebook/bart-large-cnn"
     MODEL_KWARGS = {"temperature": 0.5, "max_length": 150}
     PROMPT_TEMPLATE = """Write a concise and easy english summary of the following. Using around 100 words: "{text}" CONCISE SUMMARY:"""
@@ -22,5 +23,18 @@ def init_chain():
     return prompt | llm
 
 
+def init_tw_llm_local():
+    return HuggingFacePipeline.from_model_id(
+        model_id="yentinglin/Taiwan-LLM-7B-v2.1-chat",
+        task="text-generation",
+        pipeline_kwargs={"max_new_tokens": 10},
+    )
+
+
 def invoke_chain(chain, docs: str):
     return chain.invoke({"text": docs})
+
+
+hf = init_tw_llm_local()
+
+# %%
