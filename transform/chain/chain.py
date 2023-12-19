@@ -1,6 +1,7 @@
 # %%
 from dotenv import load_dotenv
 from langchain.llms import HuggingFaceHub
+from langchain.llms import HuggingFaceEndpoint
 from langchain.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain.prompts import ChatPromptTemplate
 
@@ -23,18 +24,22 @@ def init_cnn_chain():
     return prompt | llm
 
 
-def init_tw_llm_local():
-    return HuggingFacePipeline.from_model_id(
-        model_id="yentinglin/Taiwan-LLM-7B-v2.1-chat",
-        task="text-generation",
-        pipeline_kwargs={"max_new_tokens": 10},
-    )
+def init_tw_llm_inference_endpoint():
+    ENDPOINT_URL = "https://wsruuij88x0cp23u.us-east-1.aws.endpoints.huggingface.cloud"
+    hf = HuggingFaceEndpoint(endpoint_url=ENDPOINT_URL, task="text2text-generation")
+    return hf
+
+
+def init_tw_chain():
+    PROMPT_TEMPLATE = """翻譯成五個重點:"{text}"""
+
+    llm = init_tw_llm_inference_endpoint()
+    prompt = init_prompt_template(PROMPT_TEMPLATE)
+    return prompt | llm
 
 
 def invoke_chain(chain, docs: str):
     return chain.invoke({"text": docs})
 
-
-hf = init_tw_llm_local()
 
 # %%
