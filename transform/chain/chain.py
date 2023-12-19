@@ -31,7 +31,7 @@ def init_tw_llm_inference_endpoint():
 
 
 def init_tw_chain():
-    PROMPT_TEMPLATE = """翻譯成五個重點:"{text}"""
+    PROMPT_TEMPLATE = """Write a concise and easy chinese summary of the following. Using around 200 words: "{text}" CONCISE SUMMARY:"""
 
     llm = init_tw_llm_inference_endpoint()
     prompt = init_prompt_template(PROMPT_TEMPLATE)
