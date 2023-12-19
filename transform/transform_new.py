@@ -2,9 +2,18 @@
 import logging
 import time
 
-from result import Err, Ok, Result
+from result import Err, Ok, Result, is_err
 
 from transform.chain.chain import init_cnn_chain, init_tw_chain
+
+
+def transformed_news_cleaning(transformed_news) -> Result[str, str]:
+    # Remove the "ASSISTANT:" or "輸出:ASSISTANT:"
+    if transformed_news.startswith("ASSISTANT:"):
+        transformed_news = transformed_news[10:]
+    if transformed_news.startswith("輸出:ASSISTANT:"):
+        transformed_news = transformed_news[16:]
+    return Ok(transformed_news)
 
 
 def transform_raw_news_into_transformed_news(raw_news_list: list) -> Result[list, str]:
@@ -27,10 +36,11 @@ def transform_raw_news_into_transformed_news(raw_news_list: list) -> Result[list
             print("Chain invoke end")
             # Remove the "ASSISTANT:"
             row["summary"] = res_cnn
-            if res_tw.startswith("ASSISTANT:"):
-                row["summary_tw"] = res_tw[10:]
-            else:
-                row["summary_tw"] = res_tw
+            cleaning_result = transformed_news_cleaning(res_tw)
+            if is_err(cleaning_result):
+                return Err(cleaning_result.err_value)
+            res_tw = cleaning_result.ok_value
+            row["summary_tw"] = res_tw
             transformed_news_list.append(row)
     except Exception as e:
         logging.error(e)
